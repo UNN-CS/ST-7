@@ -6,8 +6,7 @@ import com.stepanew.utilities.AlbumCoverGenerator;
 public class App {
 
     public static void main(String[] args) {
-        AlbumCoverGenerator albumCoverGenerator = new AlbumCoverGenerator(new Graduation());
-        albumCoverGenerator.generateAlbumCover();
+        new AlbumCoverGenerator(new Graduation()).generateAlbumCover();
     }
 
 }
