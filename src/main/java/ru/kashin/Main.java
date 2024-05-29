@@ -1,4 +1,4 @@
-package ru.kudinov;
+package ru.kashin;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
