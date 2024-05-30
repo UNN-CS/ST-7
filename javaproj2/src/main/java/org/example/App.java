@@ -20,13 +20,15 @@ public class App
                 WebElement element = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input"));
                 element.sendKeys("Perturbator");
             } catch (Exception e) {
-                System.out.println("Could not set field value");
+                System.out.println("Error");
+                System.out.println(e.toString());
             }
             try {
                 WebElement element = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input"));
                 element.sendKeys("I Am The Night");
             } catch (Exception e) {
-                System.out.println("Could not set field value");
+                System.out.println("Error");
+                System.out.println(e.toString());
             }
 
             List<String> tracklist = new ArrayList<>();
@@ -48,19 +50,22 @@ public class App
                 WebElement element = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]"));
                 element.click();
             } catch (Exception e) {
-                System.out.println("Could not click on element");
+                System.out.println("Error");
+                System.out.println(e.toString());
             }
             try {
                 WebElement element = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]"));
                 element.click();
             } catch (Exception e) {
-                System.out.println("Could not click on element");
+                System.out.println("Error");
+                System.out.println(e.toString());
             }
             try {
                 WebElement element = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[7]/td[2]/input"));
                 element.click();
             } catch (Exception e) {
-                System.out.println("Could not click on element");
+                System.out.println("Error");
+                System.out.println(e.toString());
             }
             webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/p/input")).submit();
         } catch (Exception e) {
