@@ -42,7 +42,7 @@ public class Application {
             "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]";
 
     private static final String NAME_PAPER_RADIOBUTTON_XPATH =
-            "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[1]";
+            "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]";
 
     private static final String NAME_SUBMIT_BUTTON_XPATH =
             "/html/body/table[2]/tbody/tr/td[1]/div/form/p/input";
