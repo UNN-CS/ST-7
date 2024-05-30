@@ -63,7 +63,6 @@ public class App
             btn.submit();
         } catch (Exception e) {
             System.out.println("Error");
-
         }
     }
 }
