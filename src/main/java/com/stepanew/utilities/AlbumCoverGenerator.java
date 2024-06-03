@@ -1,6 +1,7 @@
 package com.stepanew.utilities;
 
 import com.stepanew.entities.Album;
+import com.stepanew.entities.Paths;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,52 +11,49 @@ import java.util.stream.IntStream;
 
 public class AlbumCoverGenerator {
 
-    private static final String ARTIST_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input";
+    private static final String ARTIST = "ARTIST_PATH";
 
-    private static final String TITLE_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input";
+    private static final String TITLE = "TITLE_PATH";
 
-    //первый аргумент format() -> номер колонки (1, 2); второй аргумент -> номер строки (1..8)
-    private static final String TRACKS_PATH_FORMAT = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[%d]/table/tbody/tr[%d]/td[2]/input";
+    private static final String TRACKS = "TRACKS_PATH_FORMAT";
 
-    private static final String BUTTON_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/p/input";
+    private static final String BUTTON = "BUTTON_PATH";
 
-    //первый аргумент format() -> номер типа обложки (1, 2)
-    private static final String TYPE_PATH_FORMAT = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[%d]";
+    private static final String TYPE = "TYPE_PATH_FORMAT";
 
-    //первый аргумент format() -> номер бумаги обложки (1, 2)
-    private static final String PAPER_PATH_FORMAT = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[%d]";
+    private static final String PAPER = "PAPER_PATH_FORMAT";
 
-    private static final String SOURCE = "http://www.papercdcase.com/index.php";
+    private static final String SOURCE = "SOURCE";
 
-    private static final String DRIVER_NAME = "webdriver.chrome.driver";
+    private static final String DRIVER_NAME = "DRIVER_NAME";
 
-    private static final String DRIVER_PATH = "C:\\Users\\stepanew\\IdeaProjects\\ST-7\\chromedriver.exe";
+    private static final String DRIVER_PATH = "DRIVER_PATH";
 
     private final Album album;
 
-    private final WebDriver webDriver;
+    private final Paths paths;
 
-    static {
-        System.setProperty(DRIVER_NAME, DRIVER_PATH);
-    }
+    private final WebDriver webDriver;
 
     public AlbumCoverGenerator(Album album) {
         this.album = album;
+        this.paths = new CsvParser().readDataFile();
         this.webDriver = new ChromeDriver();
+        System.setProperty(paths.getPath(DRIVER_NAME), paths.getPath(DRIVER_PATH));
     }
 
     public void generateAlbumCover() {
         try {
-            webDriver.get(SOURCE);
+            webDriver.get(paths.getPath(SOURCE));
 
-            sendKeysToPath(album.getArtist(), ARTIST_PATH);
-            sendKeysToPath(album.getTitle(), TITLE_PATH);
+            sendKeysToPath(album.getArtist(), paths.getPath(ARTIST));
+            sendKeysToPath(album.getTitle(), paths.getPath(TITLE));
 
             sendTracks();
 
-            clickToPath(String.format(TYPE_PATH_FORMAT, 2));
-            clickToPath(String.format(PAPER_PATH_FORMAT, 2));
-            clickToPath(BUTTON_PATH);
+            clickToPath(String.format(paths.getPath(TYPE), 2));
+            clickToPath(String.format(paths.getPath(PAPER), 2));
+            clickToPath(paths.getPath(BUTTON));
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -77,7 +75,7 @@ public class AlbumCoverGenerator {
                 .forEach(i -> {
                     int numColl = i < 8 ? 1 : 2;
                     int numRow = i < 8 ? i + 1 : (i % 8) + 1;
-                    String path = String.format(TRACKS_PATH_FORMAT, numColl, numRow);
+                    String path = String.format(paths.getPath(TRACKS), numColl, numRow);
                     String key = tracks.get(i);
                     sendKeysToPath(key, path);
                 });
