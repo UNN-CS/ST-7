@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -24,15 +25,21 @@ public class App {
             driver.get(ByXpath.WEBSITE);
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
 
-        inputDataInElement(ByXpath.ARTIST_INPUT_XPATH, album.getArtist());
-        inputDataInElement(ByXpath.ALBUM_TITLE_INPUT_XPATH, album.getTitle());
-        inputTracks(album.getTracks());
-        clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH);
-        clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH);
-        clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH);
+        final List<Runnable> actions = Arrays.asList(
+                () -> inputDataInElement(ByXpath.ARTIST_INPUT_XPATH, album.getArtist()),
+                () -> inputDataInElement(ByXpath.ALBUM_TITLE_INPUT_XPATH, album.getTitle()),
+                () -> inputTracks(album.getTracks()),
+                () -> clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH),
+                () -> clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH),
+                () -> clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH)
+        );
 
+        for (Runnable action : actions) {
+            action.run();
+        }
 
         try {
             downloadPDF();
