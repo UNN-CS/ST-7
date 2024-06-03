@@ -15,28 +15,27 @@ import static constants.WebDriver.WEBDRIVER_PATH;
 
 public class App {
     static final int TRACKS_COLUMN_LENGTH = 8;
+    static final List<Runnable> actions = Arrays.asList(
+            () -> inputDataInElement(ByXpath.ARTIST_INPUT_XPATH, Album.albumGruppaKrovi.artist()),
+            () -> inputDataInElement(ByXpath.ALBUM_TITLE_INPUT_XPATH, Album.albumGruppaKrovi.title()),
+            () -> inputTracks(Album.albumGruppaKrovi.tracks()),
+            () -> clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH),
+            () -> clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH),
+            () -> clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH),
+            App::downloadPDF
+    );
+
     static WebDriver driver;
 
     public static void main(String[] args) {
         driver = new ChromeDriver();
         System.setProperty(WEBDRIVER, WEBDRIVER_PATH);
-        AlbumGruppaKrovi album = new AlbumGruppaKrovi();
         try {
             driver.get(ByXpath.WEBSITE);
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
-
-        final List<Runnable> actions = Arrays.asList(
-                () -> inputDataInElement(ByXpath.ARTIST_INPUT_XPATH, album.getArtist()),
-                () -> inputDataInElement(ByXpath.ALBUM_TITLE_INPUT_XPATH, album.getTitle()),
-                () -> inputTracks(album.getTracks()),
-                () -> clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH),
-                () -> clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH),
-                () -> clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH),
-                App::downloadPDF
-        );
 
         for (Runnable action : actions) {
             action.run();
