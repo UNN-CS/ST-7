@@ -9,14 +9,26 @@ import org.openqa.selenium.chrome.ChromeOptions;
 record Album(String name, String artistName, String[] trackNames) {}
 
 public class Main {
+    private static final String CHROME_DRIVER_PATH = "/home/relby/Downloads/chromedriver-linux64/chromedriver";
+    private static final String CHROME_PATH = "/home/relby/Downloads/chrome-linux64/chrome";
+    private static final String URL = "http://www.papercdcase.com/index.php";
+    private class XPath {
+        public static final String ARTIST_TEXT_INPUT = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input";
+        public static final String TITLE_TEXT_INPUT = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input";
+        public static final String TRACK_TEXT_INPUT = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[%d]/table/tbody/tr[%d]/td[2]/input";
+        public static final String JEWEL_CASE_BUTTON = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]";
+        public static final String A4_BUTTON = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]";
+        public static final String FORM = "/html/body/table[2]/tbody/tr/td[1]/div/form";
+    }
+
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", "/home/relby/Downloads/chromedriver-linux64/chromedriver");
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
 
         ChromeOptions options = new ChromeOptions();
-        options.setBinary("/home/relby/Downloads/chrome-linux64/chrome");
+        options.setBinary(CHROME_PATH);
         WebDriver driver = new ChromeDriver(options);
 
-        driver.get("http://www.papercdcase.com/index.php");
+        driver.get(URL);
 
         Album album = new Album("Hot Fuss", "The Killers", new String[] {
             "Jenny Was A Friend Of Mine",
@@ -32,29 +44,29 @@ public class Main {
             "Everything Will Be Alright",
         });
 
-        WebElement artistTextInputElement = driver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input"));
+        WebElement artistTextInputElement = driver.findElement(By.xpath(XPath.ARTIST_TEXT_INPUT));
         artistTextInputElement.sendKeys(album.artistName());
 
-        WebElement titleTextInputElement = driver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input"));
+        WebElement titleTextInputElement = driver.findElement(By.xpath(XPath.TITLE_TEXT_INPUT));
         titleTextInputElement.sendKeys(album.name());
 
         String[] albumTrackNames = album.trackNames();
+        int tracksColumnLength = 8;
         for (int i = 0; i < albumTrackNames.length; i++) {
-            int tracksColumnLength = 8;
             int trackColumnIndex = i / tracksColumnLength + 1;
             int trackRowIndex = i % tracksColumnLength + 1;
 
-            WebElement trackTextInputElement = driver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[%d]/table/tbody/tr[%d]/td[2]/input".formatted(trackColumnIndex, trackRowIndex)));
+            WebElement trackTextInputElement = driver.findElement(By.xpath(XPath.TRACK_TEXT_INPUT.formatted(trackColumnIndex, trackRowIndex)));
             trackTextInputElement.sendKeys(albumTrackNames[i]);
         }
 
-        WebElement jewelCaseButtonElement = driver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]"));
+        WebElement jewelCaseButtonElement = driver.findElement(By.xpath(XPath.JEWEL_CASE_BUTTON));
         jewelCaseButtonElement.click();
 
-        WebElement a4ButtonElement = driver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]"));
+        WebElement a4ButtonElement = driver.findElement(By.xpath(XPath.A4_BUTTON));
         a4ButtonElement.click();
 
-        WebElement createCdCaseElement = driver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/p/input"));
-        createCdCaseElement.submit();
+        WebElement form = driver.findElement(By.xpath(XPath.FORM));
+        form.submit();
     }
 }
