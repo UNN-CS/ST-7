@@ -93,7 +93,7 @@ public class App {
     private static Map<String, String> getValues() {
         return new HashMap<>() {{
             put("Artist", "Bonanza");
-            put("Title", "Adventure of Programmers");
+            put("Title", "Adventures of Programmers");
 
             put("Track1", "Why is this..");
             put("Track2", "Task..");
