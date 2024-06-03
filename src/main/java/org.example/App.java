@@ -12,98 +12,92 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
-public class PapercaseAutomation {
+public class AutomatedPaperCase {
     public static void main(String[] args) {
-        // Set ChromeDriver path
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\example\\Desktop\\chromedriver\\chromedriver.exe");
-
-        // Configure Chrome options
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setBinary("C:\\Users\\example\\Desktop\\chrome\\chrome.exe");
-
-        // Initialize WebDriver
-        WebDriver driver = new ChromeDriver(chromeOptions);
+        WebDriver inetGosling = configInternetDri();
 
         try {
-            // Navigate to the website
-            driver.get("http://www.papercdcase.com/index.php");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
-            // Fill album details
-            fillAlbumDetails(driver, wait);
-
-            // Select case type and generate
-            selectCaseAndGenerate(driver, wait);
-
-            // Download PDF
-            downloadPDF(driver);
+            goToPage(inetGosling);
+            addSongInform(inetGosling, inetGoslingWait());
+            choseCaseAndCreate(inetGosling, inetGoslingWait());
+            saveFileToComputer(inetGosling);
 
         } catch (Exception e) {
-            System.err.println("An error occurred: " + e.getMessage());
-        } finally {
-            // Quit WebDriver
-            driver.quit();
+            System.err.println("You have this errors - " + e.getMessage());
         }
+        quitinetGosling(inetGosling);
     }
 
-    private static void fillAlbumDetails(WebDriver driver, WebDriverWait wait) {
-        // Album details
-        String artist = "Led Zeppelin";
-        String albumTitle = "Led Zeppelin IV";
-        List<String> trackList = Arrays.asList("Black Dog", "Rock and Roll", "The Battle of Evermore", "Stairway to Heaven", "Misty Mountain Hop", "Four Sticks", "Going to California", "When the Levee Breaks"
+    private static WebDriver configInternetDri() {
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\example\\Desktop\\chromedriver\\chromedriver.exe");
+        ChromeOptions browserConfig = new ChromeOptions();
+        browserConfig.setBinary("C:\\Users\\example\\Desktop\\chrome\\chrome.exe");
+        return new ChromeDriver(browserConfig);
+    }
+
+    private static void goToPage(WebDriver inetGosling) {
+        inetGosling.get("http://www.papercdcase.com/index.php");
+    }
+
+    private static InetGoslingWait inetGoslingWait() {
+        return new InetGoslingWait(inetGosling, Duration.ofSeconds(5));
+    }
+
+    private static void addSongInform(WebDriver inetGosling, InetGoslingWait inetGoslingWait) {
+        String band = "Led Zeppelin";
+        String bandAlbum = "Led Zeppelin IV";
+        List<String> composOfThisBand = Arrays.asList("Black Dog", "Rock and Roll", "The Battle of Evermore", "Stairway to Heaven", "Misty Mountain Hop", "Four Sticks", "Going to California", "When the Levee Breaks"
         );
 
-        // Locators
-        By artistInputLocator = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input");
-        By albumTitleInputLocator = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input");
-        String trackInputXPathTemplate = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[%d]/td[2]/input";
+        WebElement inForBand = waitForVisibilityOfElement(inetGosling, inetGoslingWait, "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input");
+        enterDescription(inForBand, band);
 
-        // Fill artist name
-        WebElement artistInput = wait.until(ExpectedConditions.visibilityOfElementLocated(artistInputLocator));
-        artistInput.sendKeys(artist);
+        WebElement inForBandAlbum = waitForVisibilityOfElement(inetGosling, inetGoslingWait, "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input");
+        enterDescription(inForBandAlbum, bandAlbum);
 
-        // Fill album title
-        WebElement albumTitleInput = wait.until(ExpectedConditions.visibilityOfElementLocated(albumTitleInputLocator));
-        albumTitleInput.sendKeys(albumTitle);
-
-        // Fill track names
-        for (int i = 0; i < trackList.size(); i++) {
-            String trackInputXPath = String.format(trackInputXPathTemplate, i + 1);
-            WebElement trackInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(trackInputXPath)));
-            trackInput.sendKeys(trackList.get(i));
+        for (int r = 0; r < composOfThisBand.size(); r++) {
+            String xValue = String.format("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[%d]/td[2]/input", r + 1);
+            WebElement InSongs = waitForVisibilityOfElement(inetGosling, inetGoslingWait, xValue);
+            enterDescription(InSongs, composOfThisBand.get(r));
         }
     }
 
-    private static void selectCaseAndGenerate(WebDriver driver, WebDriverWait wait) {
-        // Case selection locators
-        By jewelCaseOptionLocator = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]");
-        By a4PaperOptionLocator = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]");
-        By createCaseButtonLocator = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/p/input");
-
-        // Select Jewel Case
-        WebElement jewelCaseOption = wait.until(ExpectedConditions.elementToBeClickable(jewelCaseOptionLocator));
-        jewelCaseOption.click();
-
-        // Select A4 paper type
-        WebElement a4PaperOption = wait.until(ExpectedConditions.elementToBeClickable(a4PaperOptionLocator));
-        a4PaperOption.click();
-
-        // Submit the form
-        WebElement createCaseButton = wait.until(ExpectedConditions.elementToBeClickable(createCaseButtonLocator));
-        createCaseButton.click();
+    private static void waitForVisibilityOfElement(WebDriver inetGosling, InetGoslingWait inetGoslingWait, String valueX) {
+        return inetGoslingWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(valueX)));
     }
 
-    private static void downloadPDF(WebDriver driver) {
-        // Switch to the new window
-        for (String handle : driver.getWindowHandles()) {
-            driver.switchTo().window(handle);
+    private static void enterDescription(WebElement webElem, String description) {
+        webElem.sendKeys(descrition);
+    }
+
+    private static void choseCaseAndCreate(WebDriver inetGosling, InetGoslingWait inetGoslingWait) {
+        clickElement(inetGosling, inetGoslingWait, "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]");
+        clickElement(inetGosling, inetGoslingWait, "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]");
+        clickElement(inetGosling, inetGoslingWait, "/html/body/table[2]/tbody/tr/td[1]/div/form/p/input");
+    }
+
+    private static void clickElement(WebDriver inetGosling, InetGoslingWait inetGoslingWait, String valueX) {
+        WebElement webElem = waitForClickabilityOfElement(inetGosling, inetGoslingWait, valueX);
+        webElem.click();
+    }
+
+    private static WebElement waitForClickabilityOfElement(WebDriver inetGosling, InetGoslingWait inetGoslingWait, String valueX) {
+        return inetGoslingWait.until(ExpectedConditions.elementToBeClickable(By.xpath(valueX)));
+    }
+
+    private static void saveFileToComputer(WebDriver inetGosling) {
+        switchToNewWindow(inetGoslingr);
+        String downloadLink = inetGosling.getCurrentUrl();
+        System.out.println("PDF файл скачан с: " + downloadLink);
+    }
+
+    private static void switchToNewWindow(WebDriver inetGosling) {
+        for (String linuxHand : inetGosling.getWindowHandles()) {
+            inetGosling.switchTo().window(linuxHand);
         }
+    }
 
-        // Get download link
-        String downloadLink = driver.getCurrentUrl();
-
-        // Download PDF
-        // Code for downloading PDF goes here
-        System.out.println("PDF downloaded from: " + downloadLink);
+    private static void quitinetGosling(WebDriver inetGosling) {
+        inetGosling.quit();
     }
 }
