@@ -14,11 +14,11 @@ public class App
     private Album album;
     private WebDriver webDriver;
 
-    private static final String ARTIST_XPATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input";
-    private static final String TITLE_XPATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input";
-    private static final String TYPE_XPATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]";
-    private static final String PAPER_XPATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[1]";
-    private static final String CREATE_BUTTON = "/html/body/table[2]/tbody/tr/td[1]/div/form/p/input";
+    private static final String ARTIST = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input";
+    private static final String TITLE = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input";
+    private static final String TYPE = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]";
+    private static final String PAPER = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[1]";
+    private static final String CREATE = "/html/body/table[2]/tbody/tr/td[1]/div/form/p/input";
 
     public static void main( String[] args )
     {
@@ -35,15 +35,20 @@ public class App
         try {
             webDriver.get("http://www.papercdcase.com/index.php");
 
-            findElementByXpath(ARTIST_XPATH).sendKeys(album.getArtist());
-            findElementByXpath(TITLE_XPATH).sendKeys(album.getAlbumTitle());
+            webDriver.findElement(By.xpath(ARTIST)).sendKeys(album.getArtist());
+            webDriver.findElement(By.xpath(TITLE)).sendKeys(album.getAlbumTitle());
 
-            musicListToXpath(album.getMusicTracks()).forEach((track, xpath) -> findElementByXpath(xpath).sendKeys(track));
+            for (int i = 0; i < album.getMusicTracks().size(); i++) {
+                int column = i / 8;
+                int row = i % 8;
 
-            findElementByXpath(TYPE_XPATH).click();
-            findElementByXpath(PAPER_XPATH).click();
+                String xpath = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[" + (column + 1) + "]/table/tbody/tr[" + (row + 1) + "]/td[2]/input";
+                webDriver.findElement(By.xpath(xpath)).sendKeys(album.getMusicTracks().get(i));
+            }
 
-            findElementByXpath(CREATE_BUTTON).click();
+            webDriver.findElement(By.xpath(TYPE)).click();
+            webDriver.findElement(By.xpath(PAPER)).click();
+            webDriver.findElement(By.xpath(CREATE)).click();
 
         } catch (Exception e) {
             System.out.println("Element not found!");
@@ -51,21 +56,4 @@ public class App
         }
     }
 
-    private WebElement findElementByXpath(String xpath) {
-        return webDriver.findElement(By.xpath(xpath));
-    }
-
-    private Map<String, String> musicListToXpath(List<String> musicTracks) {
-
-        Map<String, String> xpaths = new HashMap<>(musicTracks.size());
-
-        for (int i = 0; i < musicTracks.size(); i++) {
-            int column = i / 8;
-            int row = i % 8;
-
-            String xpath = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[" + (column + 1) + "]/table/tbody/tr[" + (row + 1) + "]/td[2]/input";
-            xpaths.put(musicTracks.get(i), xpath);
-        }
-        return xpaths;
-    }
 }
