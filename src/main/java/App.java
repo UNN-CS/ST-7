@@ -34,17 +34,12 @@ public class App {
                 () -> inputTracks(album.getTracks()),
                 () -> clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH),
                 () -> clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH),
-                () -> clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH)
+                () -> clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH),
+                App::downloadPDF
         );
 
         for (Runnable action : actions) {
             action.run();
-        }
-
-        try {
-            downloadPDF();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         driver.quit();
