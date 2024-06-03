@@ -1,0 +1,9 @@
+ARTIST_PATH, /html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input
+TITLE_PATH, /html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input
+TRACKS_PATH_FORMAT, /html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[%d]/table/tbody/tr[%d]/td[2]/input
+BUTTON_PATH, /html/body/table[2]/tbody/tr/td[1]/div/form/p/input
+TYPE_PATH_FORMAT, /html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[%d]
+PAPER_PATH_FORMAT, /html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[%d]
+SOURCE, http://www.papercdcase.com/index.php
+DRIVER_NAME, webdriver.chrome.driver
+DRIVER_PATH, C:\Users\stepanew\IdeaProjects\ST-7\chromedriver.exe
