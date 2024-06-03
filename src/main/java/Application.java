@@ -15,21 +15,21 @@ import java.net.URL;
 public class Application {
 
     public static void main(String[] args) {
-        new Application(
-                new AriaAlbum(
-                        "Aria",
-                        "Asphalt Hero",
-                        Arrays.asList(
-                        "Serving the Forces of Evil",
-                        "Hero of Asphalt",
-                        "Dead Zone",
-                        "1100",
-                        "Rose Street",
-                        "Give Your Hand to Me",
-                        "Ballad About Ancient Russian Warrior")
-                )
-        ).startWorkTheWebDriver();
+        new Application().startWorkTheWebDriver();
     }
+
+    // Album Constants:
+    private static final String ARTIST_NAME = "Aria";
+    private static final String TITLE_OF_ALBUM = "Asphalt Hero";
+    private static final List<String> LIST_OF_TRACKS = Arrays.asList(
+            "Serving the Forces of Evil",
+            "Hero of Asphalt",
+            "Dead Zone",
+            "1100",
+            "Rose Street",
+            "Give Your Hand to Me",
+            "Ballad About Ancient Russian Warrior"
+    );
 
     // XPath Constants:
     private static final String NAME_ARTIST_INPUT_XPATH =
@@ -57,12 +57,12 @@ public class Application {
     private static final String NAME_TARGET_URL =
             "http://www.papercdcase.com/index.php";
 
-    //
-    private final AriaAlbum ariaAlbum;
     private final WebDriver webDriver;
 
-    private Application(AriaAlbum ariaAlbum) {
-        this.ariaAlbum = ariaAlbum;
+    private Application() {
+        if (LIST_OF_TRACKS.size() > 16) {
+            throw new IllegalArgumentException("Max tracks in form must be <= 16.");
+        }
         try {
             System.setProperty(NAME_CHROME_DRIVER_PROPERTY, NAME_CHROME_DRIVER_PATH);
             this.webDriver = new ChromeDriver();
@@ -75,12 +75,11 @@ public class Application {
         try {
             webDriver.get(NAME_TARGET_URL);
 
-            findElementByXpathName(NAME_ARTIST_INPUT_XPATH).sendKeys(ariaAlbum.getArtistName());
-            findElementByXpathName(NAME_TITLE_INPUT_XPATH).sendKeys(ariaAlbum.getTitleAlbum());
+            findElementByXpathName(NAME_ARTIST_INPUT_XPATH).sendKeys(ARTIST_NAME);
+            findElementByXpathName(NAME_TITLE_INPUT_XPATH).sendKeys(TITLE_OF_ALBUM);
 
-            List<String> tracks = ariaAlbum.getMusicsTracks();
-            for (int i = 0; i < tracks.size(); i++) {
-                String track = tracks.get(i);
+            for (int i = 0; i < LIST_OF_TRACKS.size(); i++) {
+                String track = LIST_OF_TRACKS.get(i);
                 String xpath = String.format("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[%d]/table/tbody/tr[%d]/td[2]/input",
                         i / 8 + 1, i % 8 + 1);
                 findElementByXpathName(xpath).sendKeys(track);
@@ -106,7 +105,7 @@ public class Application {
     }
 
     private void downloadPDF() throws IOException, InterruptedException {
-        //Thread.sleep(3000); // без ожидания работает корректно, но не успевает отобразиться страница с pdf файлом, так как в конце выполнения программы браузер закрывается
+        //Thread.sleep(3000);
         String pdfUrl = webDriver.getCurrentUrl();
 
         Path downloadPath = Paths.get("cd.pdf");
