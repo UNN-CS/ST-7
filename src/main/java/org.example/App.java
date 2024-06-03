@@ -15,17 +15,19 @@ public class Main {
     public static void main(String[] args) {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\example\\Desktop\\chromedriver\\chromedriver.exe");
 
-        ChromeOptions options = new ChromeOptions();
-        options.setBinary("C:\\Users\\example\\Desktop\\chrome\\chrome.exe");
-        WebDriver driver = new ChromeDriver(options);
+        ChromeOptions settings = new ChromeOptions();
+        settings.setBinary("C:\\Users\\example\\Desktop\\chrome\\chrome.exe");
+        WebDriver chromeConfig = new ChromeDriver(settings);
 
         try {
-            driver.get("http://www.papercdcase.com/index.php");
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            // Open the website
+            chromeConfig.get("http://www.papercdcase.com/index.php");
+            WebDriverWait needTime = new WebDriverWait(chromeConfig, Duration.ofSeconds(5));
 
-            String artistName = "Queen";
-            String albumTitle = "A Night at the Opera";
-            List<String> trackList = List.of(
+            // Define album details
+            String singerPseudonim = "Queen";
+            String trackFromAlb = "A Night at the Opera";
+            List<String> queensSongs = List.of(
                     "Death on Two Legs",
                     "Lazing on a Sunday Afternoon",
                     "I'm in Love with My Car",
@@ -40,46 +42,41 @@ public class Main {
                     "God Save the Queen"
             );
 
-            String artistInputXPath = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input";
-            String albumTitleInputXPath = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input";
-            String trackInputXPathTemplate = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[%d]/table/tbody/tr[%d]/td[2]/input";
-            String jewelCaseOptionXPath = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]";
-            String a4PaperOptionXPath = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]";
-            String createCaseButtonXPath = "/html/body/table[2]/tbody/tr/td[1]/div/form/p/input";
-
-            // Fill artist name
-            WebElement artistInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(artistInputXPath)));
-            artistInputField.sendKeys(artistName);
-
-            // Fill album title
-            WebElement albumTitleInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(albumTitleInputXPath)));
-            albumTitleInputField.sendKeys(albumTitle);
-
-            // Fill track names
-            for (int i = 0; i < trackList.size(); i++) {
-                int column = i / 8 + 1;
-                int row = i % 8 + 1;
-                String trackInputXPath = String.format(trackInputXPathTemplate, column, row);
-                WebElement trackInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(trackInputXPath)));
-                trackInputField.sendKeys(trackList.get(i));
-            }
-
-            // Select Jewel Case
-            WebElement jewelCaseOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(jewelCaseOptionXPath)));
-            jewelCaseOption.click();
-
-            // Select A4 paper type
-            WebElement a4PaperOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(a4PaperOptionXPath)));
-            a4PaperOption.click();
-
-            // Submit the form
-            WebElement createCaseButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(createCaseButtonXPath)));
-            createCaseButton.click();
+            // Fill in the album details and create the CD case
+            fillAlbumDetailsAndCreateCDCase(needTime, chromeConfig, singerPseudonim, trackFromAlb, queensSongs);
 
         } catch (Exception e) {
             System.err.println("An error occurred: " + e.getMessage());
-        } finally {
-            driver.quit();
         }
+        chromeConfig.quit();
+    }
+
+    private static void fillAlbumDetailsAndCreateCDCase(WebDriverWait needTime, WebDriver chromeConfig, String singerPseudonim, String trackFromAlb, List<String> queensSongs) {
+        // Fill artist name
+        WebElement inForSingerName = needTime.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='artist']")));
+        inForSingerName.sendKeys(singerPseudonim);
+
+        // Fill album title
+        WebElement inForAlbName = needTime.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@name='title']")));
+        inForAlbName.sendKeys(trackFromAlb);
+
+        // Fill track names
+        for (int i = 0; i < queensSongs.size(); i++) {
+            String softSongsIn = String.format("//input[@name='track%d']", i + 1);
+            WebElement songInPosition = needTime.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(softSongsIn)));
+            songInPosition.sendKeys(queensSongs.get(i));
+        }
+
+        // Select Jewel Case
+        WebElement n1 = needTime.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@value='Jewel Case']")));
+        n1.click();
+
+        // Select A4 paper type
+        WebElement n2 = needTime.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@value='A4']")));
+        n2.click();
+
+        // Submit the form
+        WebElement n3 = needTime.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@type='submit' and @value='Create Case!']")));
+        n3.click();
     }
 }
