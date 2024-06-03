@@ -17,21 +17,21 @@ public class Application {
     public static void main(String[] args) {
         new Application(
                 new MyArtist(
-                        "Katy Perry",
-                        "One of the Boys",
+                        "WOODJU",
+                        " E P H E M E R A L",
                         Arrays.asList(
-                                "One of the Boys",
-                                "I Kissed a Girl",
-                                "Waking Up in Vegas",
-                                "Thinking of You",
-                                "Mannequin",
-                                "Ur So Gay",
-                                "Hot n Cold",
-                                "If You Can Afford Me",
-                                "Lost",
-                                "Self Inflicted",
-                                "Iâ m Still Breathing",
-                                "Fingerprints"
+                                "E P H E M E R A L",
+                                "Quaoar",
+                                "Replay",
+                                "V Λ C U U M",
+                                "Sod’s Law",
+                                "Journey",
+                                "Halcyon",
+                                "Route built",
+                                "deSolate",
+                                "Over the hill",
+                                "Inland",
+                                "dance like no one is watching"
                         )
                 )
         ).startWorkTheWebDriver();
