@@ -106,7 +106,7 @@ public class App {
 
             put("Track9", "This world is complicated");
             put("Track10", "But work is work");
-            put("Track11", "Yah have to force yourself into it");
+            put("Track11", "You have to force yourself into it");
             put("Track12", "Even if.. It looks unusual");
             put("Track13", "Gotta keep going at it");
             put("Track14", "And stay creative");
