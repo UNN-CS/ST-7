@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.ArrayList;
+
 /**
  * Hello world!
  *
@@ -22,36 +24,21 @@ public class App
             WebElement title = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input"));
             title.sendKeys("Hollow Knight: Gods & Nightmares");
 
-            WebElement track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[1]/td[2]/input"));
-            track.sendKeys("Hive Knight");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/input"));
-            track.sendKeys("Truth, Beauty and Hatred");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[3]/td[2]/input"));
-            track.sendKeys("Nightmare Lantern (Interlude)");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[4]/td[2]/input"));
-            track.sendKeys("The Grimm Troupe");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[5]/td[2]/input"));
-            track.sendKeys("Nightmare King");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[6]/td[2]/input"));
-            track.sendKeys("White Defender");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[7]/td[2]/input"));
-            track.sendKeys("Dreamers");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[8]/td[2]/input"));
-            track.sendKeys("Pale Court");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[1]/td[2]/input"));
-            track.sendKeys("Gods & Glory");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/input"));
-            track.sendKeys("Daughter of Hallownest");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[3]/td[2]/input"));
-            track.sendKeys("Godhome");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[4]/td[2]/input"));
-            track.sendKeys("Sisters of Battle");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[5]/td[2]/input"));
-            track.sendKeys("Haunted Foes");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[6]/td[2]/input"));
-            track.sendKeys("Furious Gods");
-            track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[7]/td[2]/input"));
-            track.sendKeys("Pure Vessel");
+
+            ArrayList<String> firstHalf = new ArrayList<>();
+            ArrayList<String> secondHalf = new ArrayList<>();
+            fillTracks(firstHalf, secondHalf);
+
+
+            WebElement track;
+            for(int i = 1; i < 9; i++) {
+                track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[1]/table/tbody/tr[" + i + "]/td[2]/input"));
+                track.sendKeys(firstHalf.get(i-1));
+            }
+            for(int i = 1; i < 8; i++) {
+                track = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[2]/table/tbody/tr[" + i + "]/td[2]/input"));
+                track.sendKeys(firstHalf.get(i-1));
+            }
 
             WebElement typeJewelcase = webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]"));
             typeJewelcase.click();
@@ -62,7 +49,26 @@ public class App
             btn.submit();
         } catch (Exception e) {
             System.out.println("Error");
-            System.out.println(e.toString());
+            System.out.println(e);
         }
+    }
+
+    static private void fillTracks(ArrayList<String> first, ArrayList<String> second) {
+        first.add("Hive Knight");
+        first.add("Truth, Beauty and Hatred");
+        first.add("Nightmare Lantern (Interlude)");
+        first.add("The Grimm Troupe");
+        first.add("Nightmare King");
+        first.add("White Defender");
+        first.add("Dreamers");
+        first.add("Pale Court");
+
+        second.add("Gods & Glory");
+        second.add("Daughter of Hallownest");
+        second.add("Godhome");
+        second.add("Sisters of Battle");
+        second.add("Haunted Foes");
+        second.add("Furious Gods");
+        second.add("Pure Vessel");
     }
 }
