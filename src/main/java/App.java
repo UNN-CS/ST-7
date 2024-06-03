@@ -1,65 +1,97 @@
+import constants.ByXpath;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.List;
+import java.util.stream.IntStream;
+
+
+import static constants.WebDriver.WEBDRIVER;
+import static constants.WebDriver.WEBDRIVER_PATH;
 
 
 public class App {
-    static final By ARTIST_INPUT_XPATH = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input");
-    static final By ALBUM_TITLE_INPUT_XPATH = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input");
-    static final By JEWEL_CASE_OPTION_XPATH = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]");
-    static final By A_4_PAPER_OPTION_XPATH = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]");
-    static final By CREATE_CASE_BUTTON_XPATH = By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/p/input");
-    static final String TRACK_STRING= "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[%d]/table/tbody/tr[%d]/td[2]/input";
-    static final String WEBDRIVER = "webdriver.chrome.driver";
-    static final String WEBDRIVER_PATH = "chromedriver-mac-arm64/chromedriver";
-    static final String WEBSITE = "http://www.papercdcase.com/index.php";
     static final int TRACKS_COLUMN_LENGTH = 8;
-
+    static WebDriver driver;
 
     public static void main(String[] args) {
-        WebDriver driver = new ChromeDriver();
+        driver = new ChromeDriver();
         System.setProperty(WEBDRIVER, WEBDRIVER_PATH);
         AlbumGruppaKrovi album = new AlbumGruppaKrovi();
         try {
-            driver.get(WEBSITE);
-            WebElement artistTextInputElement = driver.findElement(ARTIST_INPUT_XPATH);
-            artistTextInputElement.sendKeys(album.getArtist());
-
-            WebElement titleTextInputElement = driver.findElement(ALBUM_TITLE_INPUT_XPATH);
-            titleTextInputElement.sendKeys(album.getTitle());
-
-            inputTracks(driver, album.getTracks());
-
-            WebElement jewelCaseButtonElement = driver.findElement(JEWEL_CASE_OPTION_XPATH);
-            jewelCaseButtonElement.click();
-
-            WebElement a4ButtonElement = driver.findElement(A_4_PAPER_OPTION_XPATH);
-            a4ButtonElement.click();
-
-            WebElement createCdCaseElement = driver.findElement(CREATE_CASE_BUTTON_XPATH);
-            createCdCaseElement.submit();
-            downloadPDF(driver);
+            driver.get(ByXpath.WEBSITE);
         } catch (Exception e) {
-            System.err.println("An error occurred: " + e.getMessage());
-        } finally {
-            driver.quit();
+            e.printStackTrace();
         }
+
+        try {
+            inputDataInElement(ByXpath.ARTIST_INPUT_XPATH, album.getArtist());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            inputDataInElement(ByXpath.ALBUM_TITLE_INPUT_XPATH, album.getTitle());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            inputTracks(album.getTracks());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            downloadPDF();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        driver.quit();
     }
 
-    private static void inputTracks(WebDriver driver, List<String> tracks) {
-        for (int i = 0; i < tracks.size(); i++) {
-            int trackColumnIndex = i / TRACKS_COLUMN_LENGTH + 1;
-            int trackRowIndex = i % TRACKS_COLUMN_LENGTH + 1;
-            By trackXpath = By.xpath(TRACK_STRING.formatted(trackColumnIndex, trackRowIndex));
-            WebElement trackTextInputElement = driver.findElement(trackXpath);
-            trackTextInputElement.sendKeys(tracks.get(i));
-        }
+    private static void inputDataInElement(By xPath, String data) {
+        WebElement element = driver.findElement(xPath);
+        element.sendKeys(data);
     }
 
-    private static void downloadPDF(WebDriver driver) {
+    private static void clickOnElement(By xPath) {
+        WebElement element = driver.findElement(xPath);
+        element.click();
+    }
+
+    private static void inputTracks(List<String> tracks) {
+        final int tracksSize = tracks.size();
+        IntStream.range(0, tracksSize).forEach(i -> {
+            final int trackColumnIndex = i / TRACKS_COLUMN_LENGTH + 1;
+            final int trackRowIndex = i % TRACKS_COLUMN_LENGTH + 1;
+            By trackXpath = By.xpath(String.format(ByXpath.TRACK_STRING, trackColumnIndex, trackRowIndex));
+            inputDataInElement(trackXpath, tracks.get(i));
+        });
+    }
+
+    private static void downloadPDF() {
         for (String handle : driver.getWindowHandles()) {
             driver.switchTo().window(handle);
         }
