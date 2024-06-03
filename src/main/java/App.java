@@ -26,41 +26,13 @@ public class App {
             e.printStackTrace();
         }
 
-        try {
-            inputDataInElement(ByXpath.ARTIST_INPUT_XPATH, album.getArtist());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        inputDataInElement(ByXpath.ARTIST_INPUT_XPATH, album.getArtist());
+        inputDataInElement(ByXpath.ALBUM_TITLE_INPUT_XPATH, album.getTitle());
+        inputTracks(album.getTracks());
+        clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH);
+        clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH);
+        clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH);
 
-        try {
-            inputDataInElement(ByXpath.ALBUM_TITLE_INPUT_XPATH, album.getTitle());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            inputTracks(album.getTracks());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            clickOnElement(ByXpath.JEWEL_CASE_OPTION_XPATH);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            clickOnElement(ByXpath.A_4_PAPER_OPTION_XPATH);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            clickOnElement(ByXpath.CREATE_CASE_BUTTON_XPATH);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
             downloadPDF();
@@ -72,13 +44,39 @@ public class App {
     }
 
     private static void inputDataInElement(By xPath, String data) {
-        WebElement element = driver.findElement(xPath);
-        element.sendKeys(data);
+        WebElement element;
+        try {
+            element = driver.findElement(xPath);
+        } catch (Exception e) {
+            System.out.println("Ошибка при поиске элемента по XPath: " + xPath.toString());
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            element.sendKeys(data);
+        } catch (Exception e) {
+            System.out.println("Ошибка при вводе данных в элемент с XPath: " + xPath.toString() + " и данными: " + data);
+            e.printStackTrace();
+        }
     }
 
     private static void clickOnElement(By xPath) {
-        WebElement element = driver.findElement(xPath);
-        element.click();
+        WebElement element;
+        try {
+            element = driver.findElement(xPath);
+        } catch (Exception e) {
+            System.out.println("Ошибка при поиске элемента по XPath: " + xPath.toString());
+            e.printStackTrace();
+            return;
+        }
+
+        try {
+            element.click();
+        } catch (Exception e) {
+            System.out.println("Ошибка при клике по элементу с XPath: " + xPath.toString());
+            e.printStackTrace();
+        }
     }
 
     private static void inputTracks(List<String> tracks) {
