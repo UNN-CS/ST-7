@@ -2,20 +2,16 @@ package org.example;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class App {
-    private static final String ARTIST_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[1]/td[2]/input";
-    private static final String TITLE_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[2]/td[2]/input";
-    private static final String TYPE_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[4]/td[2]/input[2]"; // Jewel case
-    private static final String PAPER_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[5]/td[2]/input[2]"; // A4
-    private static final String BUTTON_PATH = "/html/body/table[2]/tbody/tr/td[1]/div/form/p/input";
-    public static final String DRIVER_PATH = "E:/Dev/chromedriver-win64/chromedriver.exe";
+
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
+        System.setProperty("webdriver.chrome.driver", "E:/Dev/chromedriver-win64/chromedriver.exe");
         WebDriver webDriver = new ChromeDriver();
         String artistName = "Bring Me The Horizon";
         String albumTitle = "POST HUMAN: NeX GEn";
@@ -26,20 +22,23 @@ public class App {
                 "DiE4u", "DIg It");
         try {
             webDriver.get("http://www.papercdcase.com/index.php");
-            webDriver.findElement(By.xpath(ARTIST_PATH)).sendKeys(artistName);
-            webDriver.findElement(By.xpath(TITLE_PATH)).sendKeys(albumTitle);
+            String base = "/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody";
+            sendValue(webDriver, base + "/tr[1]/td[2]/input", artistName);
+            sendValue(webDriver, base + "/tr[2]/td[2]/input", albumTitle);
+            String tracks = base + "/tr[3]/td[2]/table/tbody/tr/td[%d + 1]/table/tbody/tr[%d + 1]/td[2]/input";
             for (int i = 0; i < trackList.size(); i++) {
-                int col = i / 8 + 1;
-                int row = i % 8 + 1;
-                webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/table/tbody/tr[3]/td[2]/table/tbody/tr/td[" +
-                        col + "]/table/tbody/tr[" + row + "]/td[2]/input")).sendKeys(trackList.get(i));
+                String xPath = String.format(tracks, i / 8, i % 8);
+                sendValue(webDriver, xPath, trackList.get(i));
             }
-            webDriver.findElement(By.xpath(TYPE_PATH)).click();
-            webDriver.findElement(By.xpath(PAPER_PATH)).click();
-            webDriver.findElement(By.xpath(BUTTON_PATH)).submit();
+            webDriver.findElement(By.xpath(base + "/tr[4]/td[2]/input[2]")).click(); // type
+            webDriver.findElement(By.xpath(base + "/tr[5]/td[2]/input[2]")).click(); // paper
+            webDriver.findElement(By.xpath("/html/body/table[2]/tbody/tr/td[1]/div/form/p/input")).submit();
         } catch (Exception e) {
-            System.out.println("Error");
+            System.out.println("Error: " + e.getMessage());
         }
     }
+    private static void sendValue(WebDriver driver, String xPath, String value) {
+        WebElement input = driver.findElement(By.xpath(xPath));
+        input.sendKeys(value);
+    }
 }
-
