@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Класс для парсинга CSV-файлов и заполнения объекта Paths.
+ */
 public class CsvParser {
 
     private final static String CSV_PATH = "src/main/resources/paths.csv";
@@ -17,6 +20,11 @@ public class CsvParser {
         paths = new Paths();
     }
 
+    /**
+     * Читает CSV-файл и заполняет объект Paths данными из файла.
+     *
+     * @return объект Paths, содержащий данные из CSV-файла
+     */
     public Paths readDataFile() {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(CSV_PATH))) {
             String oneLine;
@@ -43,5 +51,4 @@ public class CsvParser {
 
         return paths;
     }
-
 }

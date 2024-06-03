@@ -9,6 +9,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * Класс для генерации обложки альбома на основе данных альбома и путей из CSV-файла.
+ * Использует Selenium WebDriver для автоматизации ввода данных на веб-сайте.
+ */
 public class AlbumCoverGenerator {
 
     private static final String ARTIST = "ARTIST_PATH";
@@ -35,13 +39,21 @@ public class AlbumCoverGenerator {
 
     private final WebDriver webDriver;
 
+    /**
+     * Конструктор для создания генератора обложек альбомов.
+     *
+     * @param album объект альбома, для которого генерируется обложка
+     */
     public AlbumCoverGenerator(Album album) {
         this.album = album;
         this.paths = new CsvParser().readDataFile();
-        this.webDriver = new ChromeDriver();
         System.setProperty(paths.getPath(DRIVER_NAME), paths.getPath(DRIVER_PATH));
+        this.webDriver = new ChromeDriver();
     }
 
+    /**
+     * Генерирует обложку альбома, вводя данные на веб-сайте.
+     */
     public void generateAlbumCover() {
         try {
             webDriver.get(paths.getPath(SOURCE));
@@ -60,14 +72,28 @@ public class AlbumCoverGenerator {
         }
     }
 
+    /**
+     * Вводит текст в элемент, найденный по указанному XPath.
+     *
+     * @param keys текст для ввода
+     * @param path XPath элемента
+     */
     private void sendKeysToPath(String keys, String path) {
         webDriver.findElement(By.xpath(path)).sendKeys(keys);
     }
 
+    /**
+     * Нажимает на элемент, найденный по указанному XPath.
+     *
+     * @param path XPath элемента
+     */
     private void clickToPath(String path) {
         webDriver.findElement(By.xpath(path)).click();
     }
 
+    /**
+     * Вводит треки альбома в соответствующие поля на веб-сайте.
+     */
     private void sendTracks() {
         List<String> tracks = album.getTracks();
 
