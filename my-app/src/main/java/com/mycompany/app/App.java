@@ -1,6 +1,6 @@
-mvn exec : java - Dexec.mainClass = "com.mycompany.app.App"
+package com.mycompany.app;
 
-                                    import org.openqa.selenium.By;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
