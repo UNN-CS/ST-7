@@ -1,0 +1,13 @@
+# Maven build artifacts
+my-app/target/
+
+# IDE/system files
+.idea/
+.vscode/
+*.iml
+Thumbs.db
+
+# Browser drivers and archives
+drivers/
+*.zip
+chromedriver*.exe
