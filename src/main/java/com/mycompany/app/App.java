@@ -1,45 +1,40 @@
 package com.mycompany.app;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class App 
-{
-    public static void main(String[] args)
-    {
-        System.setProperty(
-            "webdriver.chrome.driver",
-            "/snap/chromium/3390/usr/lib/chromium-browser/chromedriver"
-        );
+public class App {
+    public static void main(String[] args) {
+        String generatedPassword = getGeneratedPassword();
+        System.out.println("Пароль: " + generatedPassword);
+        System.out.println();
 
+        Task2.getIPAddress();
+        System.out.println();
+
+        Task3.getWeatherForecast();
+    }
+
+    private static String getGeneratedPassword() {
+        WebDriverManager.chromedriver().setup();
         WebDriver webDriver = new ChromeDriver();
 
         try {
             webDriver.get("https://www.calculator.net/password-generator.html");
-
-            Thread.sleep(2000);
-
-            WebElement passwordElement =
-                webDriver.findElement(By.cssSelector(".verybigtext b"));
-
-            String generatedPassword = passwordElement.getText();
-
-            System.out.println("Password: " + generatedPassword);
-            System.out.println();
-
-            Task2.getIpAddress(webDriver);
-            Task3.getWeatherForecast(webDriver);
-
-            Thread.sleep(3000);
+            WebDriverWait wait = new WebDriverWait(webDriver, 10);
+            return wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='verybigtext']")))
+                    .getText().trim();
 
         } catch (Exception e) {
-            System.out.println("Error");
-            System.out.println(e.toString());
-
+            System.out.println("Error: " + e.toString());
         } finally {
             webDriver.quit();
         }
+        return "";
     }
 }
