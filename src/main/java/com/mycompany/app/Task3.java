@@ -72,7 +72,7 @@ public class Task3
             System.out.println();
             
             // Сохраняем в файл
-            String outputPath = "c:\\Users\\vladb\\UT2026\\ST-7\\result\\forecast.txt";
+            String outputPath = "result/forecast.txt";
             try (FileWriter writer = new FileWriter(outputPath)) {
                 writer.write(fileContent.toString());
                 System.out.println("Таблица сохранена в файл: " + outputPath);
