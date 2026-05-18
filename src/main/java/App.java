@@ -59,7 +59,7 @@ public class App {
                 }
             }
 
-            // Задание №2
+            // Задани №2
             System.out.println("\n=== Задание №2: IP-адрес клиента ===");
             Task2.run(webDriver);
 
