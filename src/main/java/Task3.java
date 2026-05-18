@@ -38,7 +38,9 @@ public class Task3 {
             String headerFmt = "%-4s | %-20s | %-13s | %-12s";
             String rowFmt    = "%-4d | %-20s | %-13s | %-12s";
             String header    = String.format(headerFmt, "№", "Дата/время", "Температура", "Осадки (мм)");
-            String separator = "-".repeat(header.length());
+            StringBuilder sepBuilder = new StringBuilder();
+            for (int s = 0; s < header.length(); s++) sepBuilder.append("-");
+            String separator = sepBuilder.toString();
 
             StringBuilder sb = new StringBuilder();
             sb.append(header).append("\n");
