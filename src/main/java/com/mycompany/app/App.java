@@ -34,6 +34,7 @@ public class App {
         } catch (Exception e) {
             System.out.println("Error: Task 1");
             System.out.println(e.toString());
+        
         } finally {
             if (webDriver != null) {
                 webDriver.quit();
