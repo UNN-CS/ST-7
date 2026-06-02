@@ -8,31 +8,28 @@ import java.time.Duration;
 
 public class App {
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\nyuti\\repos\\ST-7\\chromedriver.exe");
-        
+        System.setProperty("webdriver.chrome.driver",
+                "C:\\Users\\nyuti\\repos\\ST-7\\chromedriver.exe");
+
         WebDriver webDriver = new ChromeDriver();
         webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        
+
         try {
-            System.out.println("--- Задание 1 ---");
-            try {
-                webDriver.get("https://www.calculator.net/password-generator.html");
-                WebElement passwordElem = webDriver.findElement(By.className("verybigtext"));
-                String fullText = passwordElem.getText();
-                System.out.println("Результат: " + fullText);
-            } catch (Exception e) {
-                System.out.println("Ошибка в Задании 1: " + e.getMessage());
-            }
+            System.out.println("Задание №1");
+            webDriver.get("https://www.calculator.net/password-generator.html");
+            WebElement passwordElem = webDriver.findElement(By.className("verybigtext"));
+            String password = passwordElem.getText();
+            System.out.println("Сгенерированный пароль: " + password);
+            System.out.println();
 
-            System.out.println("\n--- Задание 2 ---");
-            Task2.run(webDriver);
-
-            System.out.println("\n--- Задание 3 ---");
-            Task3.run(webDriver);
-
+        } catch (Exception e) {
+            System.out.println("Ошибка при выполнении задания №1");
+            e.printStackTrace();
         } finally {
-            System.out.println("\nРабота завершена. Закрываю браузер...");
-            webDriver.quit();
+            webDriver.quit();   
         }
+
+        Task2.printMyIP();          
+        Task3.generateWeatherForecast(); 
     }
 }
