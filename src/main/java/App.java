@@ -1,37 +1,24 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.nio.file.Paths;
-import java.time.Duration;
 
 public class App {
-    private static final String CHROME_DRIVER_PATH = Paths
-            .get("drivers", "chromedriver-win64", "chromedriver.exe")
-            .toAbsolutePath()
-            .toString();
-
-    public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
-        WebDriver webDriver = new ChromeDriver();
+    public static void main(String[] args) throws Exception {
+        System.setProperty("webdriver.chrome.driver", "drivers/chromedriver-win64/chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
         try {
-            webDriver.get("https://www.calculator.net/password-generator.html");
+            driver.get("https://www.calculator.net/password-generator.html");
+            Thread.sleep(3000);
+            WebElement el = driver.findElement(By.cssSelector("#resultid .verybigtext b"));
+            System.out.println("Задание 1. Сгенерированный пароль: " + el.getText());
 
-            WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(20));
-            String password = wait.until(
-                    ExpectedConditions.visibilityOfElementLocated(
-                            By.cssSelector("#resultid .verybigtext b"))).getText();
-            System.out.println("Задание 1 - сгенерированный пароль: " + password);
-
-            Task2.run(webDriver);
-            Task3.run(webDriver);
+            Task2.run(driver);
+            Task3.run(driver);
         } catch (Exception e) {
-            System.out.println("Error");
-            System.out.println(e.toString());
+            System.out.println("Ошибка: " + e.getMessage());
         } finally {
-            webDriver.quit();
+            driver.quit();
         }
     }
 }
