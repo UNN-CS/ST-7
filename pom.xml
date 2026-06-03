@@ -45,7 +45,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>ru.unn.st7.App</mainClass>
+                    <mainClass>App</mainClass>
                 </configuration>
             </plugin>
         </plugins>

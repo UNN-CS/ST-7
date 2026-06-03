@@ -1,5 +1,3 @@
-package ru.unn.st7;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.By;
