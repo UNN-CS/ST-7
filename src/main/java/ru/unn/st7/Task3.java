@@ -1,55 +1,63 @@
 package ru.unn.st7;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public final class Task3 {
-    private static final String FORECAST_URL =
-        "https://api.open-meteo.com/v1/forecast?latitude=56&longitude=44&hourly=temperature_2m,rain&current=cloud_cover&timezone=Europe%2FMoscow&forecast_days=1&wind_speed_unit=ms";
+public class Task3 {
+    public static void saveWeatherForecast(WebDriver driver, String outputFile) throws Exception {
+        String apiUrl = "https://api.open-meteo.com/v1/forecast?latitude=56&longitude=44&hourly=temperature_2m,rain&timezone=Europe%2FMoscow&forecast_days=1&wind_speed_unit=ms";
+        driver.get(apiUrl);
 
-    private Task3() {
-    }
+        WebElement preBlock = driver.findElement(By.tagName("pre"));
+        String jsonData = preBlock.getText();
 
-    public static void saveForecastToFile(WebDriver webDriver, String outputPath) throws IOException {
-        webDriver.get(FORECAST_URL);
+        JSONParser parser = new JSONParser();
+        JSONObject root = (JSONObject) parser.parse(jsonData);
+        JSONObject hourly = (JSONObject) root.get("hourly");
+        JSONArray timeList = (JSONArray) hourly.get("time");
+        JSONArray tempList = (JSONArray) hourly.get("temperature_2m");
+        JSONArray rainList = (JSONArray) hourly.get("rain");
 
-        WebElement pre = webDriver.findElement(By.tagName("pre"));
-        JSONObject root = new JSONObject(pre.getText());
-        JSONObject hourly = root.getJSONObject("hourly");
-        JSONArray times = hourly.getJSONArray("time");
-        JSONArray temperatures = hourly.getJSONArray("temperature_2m");
-        JSONArray rain = hourly.getJSONArray("rain");
+        List<String> tableRows = new ArrayList<>();
+        tableRows.add("=============================================================");
+        tableRows.add(String.format("%-4s | %-20s | %-10s | %-10s", "№", "Дата/время", "Т°C", "Осадки, мм"));
+        tableRows.add("=============================================================");
+        
+        for (int i = 0; i < timeList.size(); i++) {
+            String time = (String) timeList.get(i);
+            double temperature = (double) tempList.get(i);
+            double rain = (double) rainList.get(i);
+            String line = String.format("%-4d | %-20s | %-10.1f | %-10.2f", i+1, time, temperature, rain);
+            tableRows.add(line);
+        }
+        tableRows.add("=============================================================");
 
-        List<String> lines = new ArrayList<>();
-        lines.add(String.format("%-3s\t%-16s\t%-12s\t%-12s", "№", "Дата/время", "Температура", "Осадки (мм)"));
-        for (int i = 0; i < times.length(); i++) {
-            String row = String.format(
-                Locale.US,
-                "%-3d\t%-16s\t%-12.1f\t%-12.2f",
-                i + 1,
-                times.getString(i),
-                temperatures.getDouble(i),
-                rain.getDouble(i)
-            );
-            lines.add(row);
+        Path outputPath = Path.of(outputFile);
+        if (outputPath.getParent() != null && !Files.exists(outputPath.getParent())) {
+            Files.createDirectories(outputPath.getParent());
         }
 
-        Path path = Path.of(outputPath);
-        if (path.getParent() != null) {
-            Files.createDirectories(path.getParent());
+        try (PrintWriter writer = new PrintWriter(new FileWriter(outputFile))) {
+            for (String row : tableRows) {
+                writer.println(row);
+            }
         }
-        Files.write(path, lines, StandardCharsets.UTF_8);
-        System.out.println("Задание 3. Прогноз сохранен в файл: " + outputPath);
+
+        System.out.println("Задание 3. Прогноз погоды на сутки (Нижний Новгород):");
+        for (String row : tableRows) {
+            System.out.println(row);
+        }
+        System.out.println("Таблица сохранена в файл: " + outputFile);
     }
 }
