@@ -2,8 +2,6 @@ package com.mycompany.app;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -24,7 +22,7 @@ public class App {
                     By.cssSelector("input[name='submit1'][value='Generate']"));
             generateButton.click();
 
-            WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+            WebDriverWait wait = new WebDriverWait(webDriver, 10);
             WebElement passwordElement = wait.until(
                     ExpectedConditions.visibilityOfElementLocated(
                             By.cssSelector("#resultid .verybigtext b")));
