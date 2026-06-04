@@ -14,9 +14,9 @@ public class Task2 {
         
         try {
             webDriver.get("https://api.ipify.org/?format=json");
-            WebElement elem = webDriver.findElement(By.tagName("pre"));
+            WebElement el = webDriver.findElement(By.tagName("pre"));
             
-            String jsonStr = elem.getText();
+            String jsonStr = el.getText();
             JSONParser parser = new JSONParser();
             JSONObject obj = (JSONObject) parser.parse(jsonStr);
             
