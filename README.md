@@ -35,9 +35,9 @@
 
 ```java
         System.setProperty("webdriver.chrome.driver", "путь к драйверу в файловой системе");
-        WebDriver webDriver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver();
         try {
-            webDriver.get("https://www.calculator.net/password-generator.html");
+            driver.get("https://www.calculator.net/password-generator.html");
         } catch (Exception e) {
             System.out.println("Error");
             System.out.println(e.toString());
@@ -74,11 +74,11 @@ public class App
     public static void main( String[] args )
     {
         System.setProperty("webdriver.chrome.driver", "путь к веб-драйверу");
-        WebDriver webDriver = new ChromeDriver();
+        WebDriver driver = new ChromeDriver();
         try {
-            webDriver.get("http://api.open-notify.org/astros.json");
-            System.out.println(webDriver.getPageSource());
-            WebElement elem = webDriver.findElement(By.tagName("pre"));
+            driver.get("http://api.open-notify.org/astros.json");
+            System.out.println(driver.getPageSource());
+            WebElement elem = driver.findElement(By.tagName("pre"));
 
             String json_str = elem.getText();
             JSONParser parser = new JSONParser();
