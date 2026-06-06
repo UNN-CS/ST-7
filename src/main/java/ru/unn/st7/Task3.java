@@ -14,9 +14,9 @@ import java.nio.file.Path;
 public class Task3 {
     private static final String FORECAST_URL = "https://api.open-meteo.com/v1/forecast?latitude=56&longitude=44&hourly=temperature_2m,rain&current=cloud_cover&timezone=Europe%2FMoscow&forecast_days=1&wind_speed_unit=ms";
 
-    public static void saveForecast(WebDriver driver) throws Exception {
-        driver.get(FORECAST_URL);
-        WebElement elem = driver.findElement(By.tagName("pre"));
+    public static void exportWeatherForecast(WebDriver webDriver) throws Exception {
+        webDriver.get(FORECAST_URL);
+        WebElement elem = webDriver.findElement(By.tagName("pre"));
         String jsonStr = elem.getText();
 
         JSONParser parser = new JSONParser();
@@ -35,11 +35,11 @@ public class Task3 {
             sb.append("|")
                     .append(i + 1)
                     .append(" | ")
-                    .append(String.fieldValueOf(time.get(i)))
+                    .append(String.valueOf(time.get(i)))
                     .append(" | ")
-                    .append(String.fieldValueOf(temperature.get(i)))
+                    .append(String.valueOf(temperature.get(i)))
                     .append(" | ")
-                    .append(String.fieldValueOf(rain.get(i)))
+                    .append(String.valueOf(rain.get(i)))
                     .append(" |")
                     .append(System.lineSeparator());
         }

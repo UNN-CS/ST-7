@@ -9,49 +9,49 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) {
-        WebDriver driver = initializeWebDriver();
+        WebDriver webDriver = initWebDriver();
         try {
-            String password = task1Password(driver);
+            String password = task1Password(webDriver);
             System.out.println(password);
 
-            String ip = Task2.getIp(driver);
+            String ip = Task2.fetchPublicIp(webDriver);
             System.out.println(ip);
 
-            Task3.saveForecast(driver);
+            Task3.exportWeatherForecast(webDriver);
         } catch (Exception e) {
             System.out.println("Error");
             System.out.println(e);
         } finally {
             try {
-                driver.quit();
+                webDriver.quit();
             } catch (Exception ignored) {
             }
         }
     }
 
-    private static WebDriver initializeWebDriver() {
-        ChromeOptions browserOptions = new ChromeOptions();
+    private static WebDriver initWebDriver() {
+        ChromeOptions chromeConfig = new ChromeOptions();
 
-        String browserExecutablePath = System.getenv("CHROME_BINARY");
-        if (browserExecutablePath != null && !browserExecutablePath.isBlank()) {
-            browserOptions.setBinary(browserExecutablePath);
+        String browserPath = System.getenv("CHROME_BINARY");
+        if (browserPath != null && !browserPath.isBlank()) {
+            chromeConfig.setBinary(browserPath);
         }
 
-        String webDriverLocation = System.getenv("CHROMEDRIVER_PATH");
-        if (webDriverLocation == null || webDriverLocation.isBlank()) {
-            webDriverLocation = System.getProperty("webdriver.chrome.driver");
+        String chromeDriverPath = System.getenv("CHROMEDRIVER_PATH");
+        if (chromeDriverPath == null || chromeDriverPath.isBlank()) {
+            chromeDriverPath = System.getProperty("webdriver.chrome.driver");
         }
-        if (webDriverLocation != null && !webDriverLocation.isBlank()) {
-            System.setProperty("webdriver.chrome.driver", webDriverLocation);
+        if (chromeDriverPath != null && !chromeDriverPath.isBlank()) {
+            System.setProperty("webdriver.chrome.driver", chromeDriverPath);
         }
 
-        return new ChromeDriver(browserOptions);
+        return new ChromeDriver(chromeConfig);
     }
 
-    private static String task1Password(WebDriver driver) {
-        driver.get("https://www.calculator.net/password-generator.html");
+    private static String task1Password(WebDriver webDriver) {
+        webDriver.get("https://www.calculator.net/password-generator.html");
 
-        List<By> selectors = List.of(
+        List<By> locators = List.of(
                 By.id("password"),
                 By.cssSelector("input#password"),
                 By.cssSelector("input[name='password']"),
@@ -60,21 +60,21 @@ public class App {
         );
 
         WebElement el = null;
-        for (By locator : selectors) {
-            List<WebElement> matchingElements = driver.findElements(locator);
-            if (!matchingElements.isEmpty()) {
-                el = matchingElements.get(0);
+        for (By locator : locators) {
+            List<WebElement> found = webDriver.findElements(locator);
+            if (!found.isEmpty()) {
+                el = found.get(0);
                 break;
             }
         }
 
         if (el == null) {
-            throw new IllegalStateException("Password element not matchingElements");
+            throw new IllegalStateException("Password element not found");
         }
 
-        String fieldValue = el.getAttribute("fieldValue");
-        if (fieldValue != null && !fieldValue.isBlank()) {
-            return fieldValue.trim();
+        String fieldContent = el.getAttribute("fieldContent");
+        if (fieldContent != null && !fieldContent.isBlank()) {
+            return fieldContent.trim();
         }
         return el.getText().trim();
     }

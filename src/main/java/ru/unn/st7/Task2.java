@@ -7,9 +7,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class Task2 {
-    public static String getIp(WebDriver driver) throws Exception {
-        driver.get("https://api.ipify.org/?format=json");
-        WebElement elem = driver.findElement(By.tagName("pre"));
+    public static String fetchPublicIp(WebDriver webDriver) throws Exception {
+        webDriver.get("https://api.ipify.org/?format=json");
+        WebElement elem = webDriver.findElement(By.tagName("pre"));
         String jsonStr = elem.getText();
 
         JSONParser parser = new JSONParser();
