@@ -12,43 +12,42 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Task3 {
-    private static final String FORECAST_URL = "https://api.open-meteo.com/v1/forecast?latitude=56&longitude=44&hourly=temperature_2m,rain&current=cloud_cover&timezone=Europe%2FMoscow&forecast_days=1&wind_speed_unit=ms";
+    private static final String WEATHER_API = "https://api.open-meteo.com/v1/forecast?latitude=56&longitude=44&hourly=temperature_2m,rain&current=cloud_cover&timezone=Europe%2FMoscow&forecast_days=1&wind_speed_unit=ms";
 
     public static void exportWeatherForecast(WebDriver webDriver) throws Exception {
-        webDriver.get(FORECAST_URL);
-        WebElement elem = webDriver.findElement(By.tagName("pre"));
-        String jsonStr = elem.getText();
+        webDriver.get(WEATHER_API);
+        WebElement preElement = webDriver.findElement(By.tagName("pre"));
+        String jsonContent = preElement.getText();
 
-        JSONParser parser = new JSONParser();
-        JSONObject root = (JSONObject) parser.parse(jsonStr);
-        JSONObject hourly = (JSONObject) root.get("hourly");
-        JSONArray time = (JSONArray) hourly.get("time");
-        JSONArray temperature = (JSONArray) hourly.get("temperature_2m");
-        JSONArray rain = (JSONArray) hourly.get("rain");
+        JSONParser jsonParser = new JSONParser();
+        JSONObject parsedRoot = (JSONObject) jsonParser.parse(jsonContent);
+        JSONObject hourlyData = (JSONObject) parsedRoot.get("hourly");
+        JSONArray timeList = (JSONArray) hourlyData.get("time");
+        JSONArray tempList = (JSONArray) hourlyData.get("temperature_2m");
+        JSONArray rainList = (JSONArray) hourlyData.get("rain");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("|№   |  Дата/время   | Температура | Осадки (мм)  |").append(System.lineSeparator());
-        sb.append("| -- | ------------- | ----------- | ------------ |").append(System.lineSeparator());
+        StringBuilder tableBuilder = new StringBuilder();
+        tableBuilder.append("|№   |  Дата/время   | Температура | Осадки (мм)  |").append(System.lineSeparator());
+        tableBuilder.append("| -- | ------------- | ----------- | ------------ |").append(System.lineSeparator());
 
-        int rows = Math.min(time.size(), Math.min(temperature.size(), rain.size()));
-        for (int i = 0; i < rows; i++) {
-            sb.append("|")
-                    .append(i + 1)
+        int recordCount = Math.min(timeList.size(), Math.min(tempList.size(), rainList.size()));
+        for (int idx = 0; idx < recordCount; idx++) {
+            tableBuilder.append("|")
+                    .append(idx + 1)
                     .append(" | ")
-                    .append(String.valueOf(time.get(i)))
+                    .append(String.valueOf(timeList.get(idx)))
                     .append(" | ")
-                    .append(String.valueOf(temperature.get(i)))
+                    .append(String.valueOf(tempList.get(idx)))
                     .append(" | ")
-                    .append(String.valueOf(rain.get(i)))
+                    .append(String.valueOf(rainList.get(idx)))
                     .append(" |")
                     .append(System.lineSeparator());
         }
 
-        System.out.print(sb);
+        System.out.print(tableBuilder);
 
-        Path out = Path.of("result", "forecast.txt");
-        Files.createDirectories(out.getParent());
-        Files.writeString(out, sb.toString(), StandardCharsets.UTF_8);
+        Path outputFile = Path.of("result", "forecast.txt");
+        Files.createDirectories(outputFile.getParent());
+        Files.writeString(outputFile, tableBuilder.toString(), StandardCharsets.UTF_8);
     }
 }
-

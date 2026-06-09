@@ -9,13 +9,12 @@ import org.openqa.selenium.WebElement;
 public class Task2 {
     public static String fetchPublicIp(WebDriver webDriver) throws Exception {
         webDriver.get("https://api.ipify.org/?format=json");
-        WebElement elem = webDriver.findElement(By.tagName("pre"));
-        String jsonStr = elem.getText();
+        WebElement preTag = webDriver.findElement(By.tagName("pre"));
+        String jsonData = preTag.getText();
 
         JSONParser parser = new JSONParser();
-        JSONObject obj = (JSONObject) parser.parse(jsonStr);
-        Object ip = obj.get("ip");
-        return ip == null ? "" : ip.toString();
+        JSONObject parsedObject = (JSONObject) parser.parse(jsonData);
+        Object ipAddress = parsedObject.get("ip");
+        return ipAddress == null ? "" : ipAddress.toString();
     }
 }
-
